@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vung — Unity Game Developer</title>
+<meta name="description" content="Vung is a Unity / C# game developer building mobile puzzle and casual games with responsive gameplay and polished game feel.">
+<meta property="og:title" content="Vung — Unity Game Developer">
+<meta property="og:description" content="Mobile games, gameplay systems and game feel. Two titles shipped on Google Play.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%238b7cf6'/><text x='16' y='23' font-size='18' font-weight='800' text-anchor='middle' fill='white' font-family='Arial'>V</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f7fb; --surface:#ffffff; --surface-2:#f0f0f7; --line:#e3e3ee;
+  --text:#14142b; --muted:#5d5f7a; --accent:#6d5ce8; --accent-2:#0e9fb8; --pink:#e0559c;
+  --shadow:0 1px 2px rgba(20,20,43,.05),0 8px 24px rgba(20,20,43,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b0d17; --surface:#121524; --surface-2:#181c30; --line:#242a42;
+    --text:#eef0fa; --muted:#9aa0b8; --accent:#8b7cf6; --accent-2:#22b8cf; --pink:#f472b6;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b0d17; --surface:#121524; --surface-2:#181c30; --line:#242a42;
+  --text:#eef0fa; --muted:#9aa0b8; --accent:#8b7cf6; --accent-2:#22b8cf; --pink:#f472b6;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.mono{font-family:"JetBrains Mono",Consolas,monospace}
+
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{font-weight:800;font-size:18px;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;color:#fff;font-style:normal;font-size:15px}
+.links{display:flex;gap:28px;font-size:14px;color:var(--muted);font-weight:500}
+.links a:hover{color:var(--text)}
+.theme{background:var(--surface);border:1px solid var(--line);color:var(--text);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:15px}
+
+/* hero */
+.hero{padding-top:96px;padding-bottom:80px;position:relative}
+.hero::before{content:"";position:absolute;right:-10%;top:10%;width:520px;height:520px;background:radial-gradient(circle,color-mix(in srgb,var(--accent) 22%,transparent),transparent 65%);pointer-events:none;z-index:-1}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:48px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--accent-2);letter-spacing:.08em;text-transform:uppercase;margin-bottom:20px}
+.dot{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 4px color-mix(in srgb,#22c55e 25%,transparent)}
+h1{font-size:clamp(40px,6vw,64px);line-height:1.05;letter-spacing:-.03em;font-weight:800;margin-bottom:20px}
+h1 span{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:18px;color:var(--muted);max-width:520px;margin-bottom:32px}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:12px;font-weight:600;font-size:15px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px color-mix(in srgb,var(--accent) 35%,transparent)}
+.btn.ghost{background:var(--surface);border:1px solid var(--line)}
+.stats{display:flex;gap:36px;margin-top:44px}
+.stats b{display:block;font-size:28px;font-weight:800;letter-spacing:-.02em}
+.stats span{font-size:13px;color:var(--muted)}
+
+/* phone visual */
+.phone{justify-self:center;width:250px;aspect-ratio:9/17;border-radius:36px;background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow);padding:22px 18px;position:relative;animation:float 6s ease-in-out infinite}
+.phone .notch{width:70px;height:6px;border-radius:3px;background:var(--surface-2);margin:0 auto 22px}
+.board{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.tile{aspect-ratio:1;border-radius:11px;background:var(--surface-2);transition:transform .2s,background .2s;cursor:pointer}
+.tile.on{background:var(--c)}
+.tile:active{transform:scale(.88)}
+.bar{height:10px;border-radius:5px;background:var(--surface-2);margin-top:24px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:5px;transition:width .35s}
+.phone small{display:block;text-align:center;color:var(--muted);font-size:12px;margin-top:12px}
+.chip{position:absolute;right:-70px;top:56px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:12px;box-shadow:var(--shadow);animation:float 7s ease-in-out infinite reverse;white-space:nowrap}
+.chip .k{color:var(--accent)} .chip .f{color:var(--accent-2)}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+
+/* sections */
+section{padding:80px 0}
+.sec-head{margin-bottom:40px}
+.sec-head .num{font-size:13px;color:var(--accent);font-weight:600}
+h2{font-size:clamp(28px,4vw,38px);letter-spacing:-.02em;font-weight:800;line-height:1.15}
+.sec-head p{color:var(--muted);margin-top:10px;max-width:560px}
+
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-4px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+
+/* shipped */
+.shipped{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.game{overflow:hidden;display:flex;flex-direction:column}
+.game .art{height:190px;display:grid;place-items:center;font-size:72px;position:relative}
+.game .art::after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.25),transparent 60%)}
+.art.spear{background:linear-gradient(135deg,#1e3a8a,#0e7490)}
+.art.bloom{background:linear-gradient(135deg,#be185d,#7c3aed)}
+.game .body{padding:24px;display:flex;flex-direction:column;gap:12px;flex:1}
+.game h3{font-size:21px;letter-spacing:-.01em}
+.game p{color:var(--muted);font-size:15px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{font-size:12px;font-weight:500;padding:4px 10px;border-radius:999px;background:var(--surface-2);color:var(--muted)}
+.store{margin-top:auto;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;color:var(--accent)}
+.store:hover{text-decoration:underline}
+
+/* projects */
+.featured{display:grid;grid-template-columns:1.1fr 1fr;gap:0;overflow:hidden;margin-bottom:24px}
+.featured .info{padding:36px}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent);margin-bottom:14px}
+.featured h3{font-size:28px;letter-spacing:-.02em;margin-bottom:10px}
+.featured p{color:var(--muted);margin-bottom:18px}
+.featured ul{list-style:none;display:grid;gap:8px;margin-bottom:22px;font-size:15px}
+.featured li::before{content:"→ ";color:var(--accent-2);font-weight:700}
+.featured .vis{background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 85%,#000),color-mix(in srgb,var(--accent-2) 80%,#000));display:grid;place-items:center;min-height:260px}
+.loop{width:180px;height:180px}
+.loop path{stroke-dasharray:10 8;animation:dash 3s linear infinite}
+@keyframes dash{to{stroke-dashoffset:-72}}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.proj{padding:24px;display:flex;flex-direction:column;gap:10px}
+.proj .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:22px;background:var(--surface-2)}
+.proj h4{font-size:17px}
+.proj p{color:var(--muted);font-size:14px;flex:1}
+.proj a.more{font-size:13px;font-weight:600;color:var(--accent)}
+
+/* skills */
+.skills{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.skill{padding:28px}
+.skill h4{font-size:15px;margin-bottom:6px}
+.skill p{color:var(--muted);font-size:14px;margin-bottom:16px}
+
+/* process */
+.process{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;counter-reset:s}
+.step{padding:22px 18px;position:relative}
+.step::before{counter-increment:s;content:"0" counter(s);font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--accent);font-weight:500}
+.step h4{font-size:16px;margin:8px 0 6px;letter-spacing:.02em}
+.step p{font-size:13px;color:var(--muted)}
+
+/* contact */
+.contact{padding:56px;text-align:center;background:linear-gradient(135deg,color-mix(in srgb,var(--accent) 14%,var(--surface)),color-mix(in srgb,var(--accent-2) 12%,var(--surface)))}
+.contact h2{margin-bottom:12px}
+.contact p{color:var(--muted);max-width:480px;margin:0 auto 28px}
+.contact .cta{justify-content:center}
+footer{padding:40px 0;text-align:center;color:var(--muted);font-size:13px}
+
+/* reveal */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+
+/* responsive */
+@media (max-width:900px){
+  .hero-grid,.featured{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+  .skills{grid-template-columns:1fr}
+  .process{grid-template-columns:1fr 1fr}
+  .chip{display:none}
+  .links{display:none}
+}
+@media (max-width:600px){
+  .wrap{padding:0 16px}
+  .hero{padding-top:56px;padding-bottom:48px}
+  .shipped,.grid4,.process{grid-template-columns:1fr}
+  .stats{gap:24px}
+  .featured .info,.contact{padding:28px 20px}
+  section{padding:56px 0}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo"><i>V</i>Vung</a>
+    <div class="links">
+      <a href="#games">Games</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <button class="theme" id="theme" aria-label="Toggle theme">◐</button>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow"><span class="dot"></span>Open to Unity roles &amp; collaborations</div>
+      <h1>I build games that <span>feel good</span> to play.</h1>
+      <p class="lead">I'm Vung, a Unity / C# developer making mobile puzzle and casual games. I care about the first tap, the last bit of polish and everything players feel in between.</p>
+      <div class="cta">
+        <a class="btn primary" href="#games">See my games</a>
+        <a class="btn ghost" href="https://github.com/Vung24" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+      <div class="stats">
+        <div><b>2</b><span>Games on Google Play</span></div>
+        <div><b>5+</b><span>Unity projects</span></div>
+        <div><b>C#</b><span>Main language</span></div>
+      </div>
+    </div>
+    <div style="position:relative;justify-self:center">
+      <div class="phone" aria-label="Small playable puzzle: tap tiles to light them up">
+        <div class="notch"></div>
+        <div class="board" id="board"></div>
+        <div class="bar"><i id="prog"></i></div>
+        <small id="hint">Tap the tiles ✦</small>
+      </div>
+      <div class="chip mono"><span class="k">void</span> <span class="f">OnTap</span>() { Juice(); }</div>
+    </div>
+  </div>
+</header>
+
+<section id="games">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="num mono">01 — Shipped</div>
+      <h2>Published on Google Play</h2>
+      <p>Two mobile games from prototype to store release.</p>
+    </div>
+    <div class="shipped">
+      <article class="card game reveal">
+        <div class="art spear">🎯</div>
+        <div class="body">
+          <h3>Spear Master: Aim &amp; Hit</h3>
+          <p>A mobile action game built around aiming, timing and spring-powered throws, with impact feedback that makes every hit land.</p>
+          <div class="tags"><span class="tag">Action</span><span class="tag">Physics</span><span class="tag">Game Feel</span></div>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.spear.throwing.aim.hit" target="_blank" rel="noopener">▶ View on Google Play</a>
+        </div>
+      </article>
+      <article class="card game reveal">
+        <div class="art bloom">🌷</div>
+        <div class="body">
+          <h3>Lovely Blooms: Dot Connect</h3>
+          <p>A relaxing puzzle game: connect numbered dots to complete floral shapes that bloom as you finish each level.</p>
+          <div class="tags"><span class="tag">Puzzle</span><span class="tag">Relaxing</span><span class="tag">Level Progression</span></div>
+          <a class="store" href="https://play.google.com/store/apps/details?id=com.lovely.blooms.dot.connect" target="_blank" rel="noopener">▶ View on Google Play</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="num mono">02 — Projects</div>
+      <h2>Featured Unity projects</h2>
+      <p>Public repositories and gameplay prototypes. Each one explores a different mechanic.</p>
+    </div>
+
+    <article class="card featured reveal">
+      <div class="info">
+        <span class="badge">Current project</span>
+        <h3>LoopMaster</h3>
+        <p>My latest Unity puzzle game, built around path-based gameplay and board interactions.</p>
+        <ul>
+          <li>Path-based puzzle mechanics &amp; board interactions</li>
+          <li>Level progression and booster systems</li>
+          <li>Maintainable gameplay architecture</li>
+          <li>Responsive input and game feel</li>
+        </ul>
+        <a class="btn primary" href="https://github.com/Vung24/LoopMaster" target="_blank" rel="noopener">Explore repository ↗</a>
+      </div>
+      <div class="vis">
+        <svg class="loop" viewBox="0 0 180 180" aria-hidden="true">
+          <g fill="rgba(255,255,255,.18)">
+            <circle cx="40" cy="40" r="10"/><circle cx="90" cy="40" r="10"/><circle cx="140" cy="40" r="10"/>
+            <circle cx="40" cy="90" r="10"/><circle cx="90" cy="90" r="10"/><circle cx="140" cy="90" r="10"/>
+            <circle cx="40" cy="140" r="10"/><circle cx="90" cy="140" r="10"/><circle cx="140" cy="140" r="10"/>
+          </g>
+          <path d="M40 40 H140 V90 H40 V140 H140" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="40" cy="40" r="12" fill="#fff"/><circle cx="140" cy="140" r="12" fill="#fff"/>
+        </svg>
+      </div>
+    </article>
+
+    <div class="grid4">
+      <article class="card proj reveal">
+        <div class="ic">🧪</div><h4>MagicSort</h4>
+        <p>Color-sort puzzle with tubes, beakers, level loading, input handling and power-ups.</p>
+        <div class="tags"><span class="tag">Puzzle</span></div>
+        <a class="more" href="https://github.com/Vung24/MagicSort" target="_blank" rel="noopener">View repo →</a>
+      </article>
+      <article class="card proj reveal">
+        <div class="ic">🎯</div><h4>Match3</h4>
+        <p>Tray-based matching prototype with animations, win/lose states and multiple modes.</p>
+        <div class="tags"><span class="tag">Prototype</span></div>
+        <a class="more" href="https://github.com/Vung24/Match3" target="_blank" rel="noopener">View repo →</a>
+      </article>
+      <article class="card proj reveal">
+        <div class="ic">🍢</div><h4>Grill-Sort</h4>
+        <p>Food-sorting prototype with drag-and-drop, grill stations and level generation.</p>
+        <div class="tags"><span class="tag">Interaction</span></div>
+        <a class="more" href="https://github.com/Vung24/Grill-Sort" target="_blank" rel="noopener">View repo →</a>
+      </article>
+      <article class="card proj reveal">
+        <div class="ic">🌸</div><h4>MagicBloom</h4>
+        <p>Liquid-sort puzzle with tubes, liquid segments, spawning and game management.</p>
+        <div class="tags"><span class="tag">Puzzle</span></div>
+        <a class="more" href="https://github.com/Vung24/MagicBloom" target="_blank" rel="noopener">View repo →</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="num mono">03 — Skills</div>
+      <h2>What I work with</h2>
+    </div>
+    <div class="skills">
+      <div class="card skill reveal">
+        <h4>🕹️ Gameplay &amp; Engine</h4>
+        <p>Core loops, level systems, input and player feedback.</p>
+        <div class="tags"><span class="tag">Unity</span><span class="tag">C#</span><span class="tag">DOTween</span><span class="tag">Game Feel</span></div>
+      </div>
+      <div class="card skill reveal">
+        <h4>⚙️ Architecture &amp; Performance</h4>
+        <p>Systems that scale with content and run smoothly on mid-range phones.</p>
+        <div class="tags"><span class="tag">Addressables</span><span class="tag">Object Pooling</span><span class="tag">Optimization</span><span class="tag">Git</span></div>
+      </div>
+      <div class="card skill reveal">
+        <h4>📱 Mobile &amp; Services</h4>
+        <p>Everything a game needs to ship and grow on the store.</p>
+        <div class="tags"><span class="tag">Android</span><span class="tag">Firebase</span><span class="tag">Analytics</span><span class="tag">IAP</span><span class="tag">Ad SDKs</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="num mono">04 — Process</div>
+      <h2>How I approach a game</h2>
+    </div>
+    <div class="process">
+      <div class="card step reveal"><h4>BUILD</h4><p>Get one mechanic working, fast.</p></div>
+      <div class="card step reveal"><h4>PLAYTEST</h4><p>Put it in hands and watch.</p></div>
+      <div class="card step reveal"><h4>FEEL</h4><p>Tune timing, juice and feedback.</p></div>
+      <div class="card step reveal"><h4>OPTIMIZE</h4><p>Smooth frames on real devices.</p></div>
+      <div class="card step reveal"><h4>POLISH</h4><p>The small details players notice.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="card contact reveal">
+      <h2>Let's build something fun.</h2>
+      <p>Open to Unity game development roles and collaborations on interesting gameplay ideas.</p>
+      <div class="cta">
+        <a class="btn primary" href="mailto:Vung030524@gmail.com">✉ Vung030524@gmail.com</a>
+        <a class="btn ghost" href="https://github.com/Vung24" target="_blank" rel="noopener">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© <span id="y"></span> Vung · Built by hand, tuned like a game.</footer>
+
+<script>
+// theme toggle (per-viewer preference)
+const root=document.documentElement;
+try{const t=localStorage.getItem('theme');if(t)root.dataset.theme=t}catch(e){}
+document.getElementById('theme').onclick=()=>{
+  const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+  root.dataset.theme=dark?'light':'dark';
+  try{localStorage.setItem('theme',root.dataset.theme)}catch(e){}
+};
+document.getElementById('y').textContent=new Date().getFullYear();
+
+// mini puzzle in the phone
+const colors=['var(--accent)','var(--accent-2)','var(--pink)','#f59e0b'];
+const board=document.getElementById('board'),prog=document.getElementById('prog'),hint=document.getElementById('hint');
+const tiles=[];
+for(let i=0;i<16;i++){
+  const t=document.createElement('button');
+  t.className='tile';t.setAttribute('aria-label','tile '+(i+1));
+  t.style.border='none';
+  t.style.setProperty('--c',colors[i%4]);
+  if([0,5,10,15].includes(i))t.classList.add('on');
+  t.onclick=()=>{t.classList.toggle('on');update()};
+  board.appendChild(t);tiles.push(t);
+}
+function update(){
+  const n=tiles.filter(t=>t.classList.contains('on')).length;
+  prog.style.width=(n/16*100)+'%';
+  hint.textContent=n===16?'Level complete! 🎉':n+' / 16 lit';
+  if(n===16)setTimeout(()=>{tiles.forEach((t,i)=>setTimeout(()=>t.classList.remove('on'),i*30));setTimeout(update,600)},1200);
+}
+update();hint.textContent='Tap the tiles ✦';
+
+// reveal on scroll
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
